@@ -1,0 +1,6 @@
+{
+  "name": "backbone-api-facebook",
+  "version": "0.1.0",
+  "main": ["./backbone.api.facebook.js"],
+  "dependencies": { "backbone", "underscore" }
+}
