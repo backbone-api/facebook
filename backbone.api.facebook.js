@@ -1,11 +1,13 @@
 // Assuming that Facebook JS lib is loaded...
 (function(_, Backbone) {
-  
-  // Fallbacks
-  APP = window.APP || (APP = { models: {}, collections: {}, views: {} });
-  if( _isUndefined(Backbone.API) ) Backbone.API = {};
-  
-  Backbone.API.Facebook = Backbone.Collection.extend({
+	
+	// Fallbacks
+	APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
+	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
+	// 
+	APP.Facebook = {};
+	
+	Backbone.API.Facebook = Backbone.Collection.extend({
 		fetch : function(method, model, options) {
 			var self = this;
 			FB.getLoginStatus(function(response){
@@ -41,17 +43,25 @@
 		}
 	});
 	
-	Backbone.API.Facebook.Friend = Backbone.Model.extend({
+	Backbone.API.Facebook.Models = {};
+	
+	Backbone.API.Facebook.Models.User = Backbone.Model.extend({
 		defaults : {
 			//installed : true
 		}
 	});
-
-
-// Application interaction...
 	
-	APP.Collections.Friends = Backbone.API.Facebook.extend({
-		model : Backbone.API.Facebook.Friend,
+	Backbone.API.Facebook.Models.Feed = Backbone.Model.extend({
+		defaults : {
+			//installed : true
+		}
+	});
+	
+	
+	// Application interaction...
+	
+	APP.Facebook.Friends = Backbone.API.Facebook.extend({
+		model : Backbone.API.Facebook.Models.User,
 		url: function(){
 			return {
 				method: 'fql.query',
@@ -59,9 +69,28 @@
 			}
 		}, 
 		initialize: function( model, options){
-			// call cache on every state change
-			this.fetch();
+			// auto-fetch if requested...
+			if( options.fetch ){ 
+				this.fetch();
+			}
 		}
 	});
+
+	APP.Facebook.Feed = Backbone.API.Facebook.extend({
+		model : Backbone.API.Facebook.Models.Feed,
+		url: function(){
+			return "/me/feed"; 
+		}, 
+		initialize: function( model, options){
+			
+			// parameters
+			this.num = options.num || 10;
+			// auto-fetch if requested...
+			if( options.fetch ){ 
+				this.fetch();
+			}
+		}
+	});
+	
 
 })(this._, this.Backbone);
