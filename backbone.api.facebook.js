@@ -79,11 +79,20 @@
 	APP.Facebook.Feed = Backbone.API.Facebook.extend({
 		model : Backbone.API.Facebook.Models.Feed,
 		url: function(){
-			return "/me/feed"; 
+			return {
+				method: 'fql.query',
+				query: "select message,description,attachment,created_time from stream where source_id ='"+ this.id +"' limit "+ this.num,
+				access_token: config.facebook.access_token
+			}
+			// old...
+			// check if there is either an id or user set - fallback to 'me'
+			//var page = this.user || this.id || "me";
+			//return "/"+ page +"/feed?limit="+ this.num; 
 		}, 
 		initialize: function( model, options){
-			
 			// parameters
+			this.id = options.id || false;
+			this.user = options.user || null;
 			this.num = options.num || 10;
 			// auto-fetch if requested...
 			if( options.fetch ){ 
@@ -92,5 +101,4 @@
 		}
 	});
 	
-
 })(this._, this.Backbone);
