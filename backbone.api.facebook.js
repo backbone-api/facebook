@@ -192,11 +192,28 @@ if( window.FB ) (function(_, Backbone) {
 	
 	//
 	Backbone.API.Facebook.Views.Post = View.extend({
-		
+		callback : function(response) {
+			//document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+		}
 	});
 	
 	Backbone.API.Facebook.Views.Login = View.extend({
-		
+		callback : function (response) {
+			if( typeof( response ) != "undefined") { 
+				if(response.session) {
+					//var user = JSON.parse(response.session);
+					// save the userid in the form
+					//$("#entry-form").find("input[name='fbid']").val(user.uid);
+					//top.location.href = tab.link;
+				} else {
+					// No session
+					//top.location.href = tab.host;
+				}
+			} else {
+				// denied access
+				top.location.href = tab.host;
+			}
+		}
 	});
 	
 	
