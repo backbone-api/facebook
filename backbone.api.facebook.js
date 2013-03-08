@@ -2,11 +2,10 @@
 (function(_, Backbone) {
 	
 	// Fallbacks
-	APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
+	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
-	// 
-	APP.Facebook = {};
 	
+	// Main Constructor
 	Backbone.API.Facebook = Backbone.Collection.extend({
 		// available options
 		options : {
@@ -60,8 +59,14 @@
 		}
 	});
 	
-	Backbone.API.Facebook.Models = {};
 	
+	// Namespace definition
+	Backbone.API.Facebook.Models = {};
+	Backbone.API.Facebook.Collections = {};
+	Backbone.API.Facebook.Views = {};
+	
+	
+	// Models
 	Backbone.API.Facebook.Models.User = Backbone.Model.extend({
 		defaults : {
 			//installed : true
@@ -75,9 +80,8 @@
 	});
 	
 	
-	// Application interaction...
-	
-	APP.Facebook.Friends = Backbone.API.Facebook.extend({
+	// Collections
+	Backbone.API.Facebook.Collections.Friends = Backbone.API.Facebook.extend({
 		model : Backbone.API.Facebook.Models.User,
 		url: function(){
 			return {
@@ -93,7 +97,7 @@
 		}
 	});
 
-	APP.Facebook.Feed = Backbone.API.Facebook.extend({
+	Backbone.API.Facebook.Collections.Feed = Backbone.API.Facebook.extend({
 		// examples options:
 		options: {
 			//access_token : config.facebook.access_token
@@ -127,5 +131,10 @@
 			}
 		}
 	});
+	
+// Shortcut
+if(typeof window.Facebook == "undefined"){
+	window.Facebook = Backbone.API.Facebook;
+}
 	
 })(this._, this.Backbone);
