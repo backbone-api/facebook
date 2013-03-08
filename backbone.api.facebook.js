@@ -1,12 +1,68 @@
 // Assuming that Facebook JS lib is loaded...
-(function(_, Backbone) {
+if( window.FB ) (function(_, Backbone) {
 	
 	// Fallbacks
 	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
 	
-	// Main Constructor
-	Backbone.API.Facebook = Backbone.Collection.extend({
+	// Namespace definition
+	Backbone.API.Facebook = {
+		Models : {}, 
+		Collections : {}, 
+		Views : {}
+	};
+	
+	
+	// Models
+	
+	// - Main Constructor
+	var Model = Backbone.Model.extend({
+		
+	});
+	
+	// 
+	Backbone.API.Facebook.Models.User = Model.extend({
+		defaults : {
+			//installed : true
+		}
+	});
+	
+	Backbone.API.Facebook.Models.Feed = Model.extend({
+		defaults : {}
+	});
+	
+	Backbone.API.Facebook.Models.Post = Model.extend({
+		defaults : {
+			method: "feed",
+			link: "",
+			picture: "",
+			name: "",
+			caption: "",
+			description: ""
+		}
+	});
+	
+	Backbone.API.Facebook.Models.Login = Model.extend({
+		defaults : {
+			method: "oauth", 
+			client_id: false, 
+			redirect_uri: ""
+		}
+	});
+	
+	// Me is an extension of the user
+	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
+		url : "/me",
+		defaults : { 
+			id : "me" 
+		}
+	});
+	
+	
+	// Collections
+	
+	// - Main Constructor
+	var Collection = Backbone.Collection.extend({
 		// available options
 		options : {
 			access_token : false
@@ -59,53 +115,9 @@
 		}
 	});
 	
-	// Namespace definition
-	Backbone.API.Facebook.Models = {};
-	Backbone.API.Facebook.Collections = {};
-	Backbone.API.Facebook.Views = {};
 	
-	
-	// Models
-	Backbone.API.Facebook.Models.User = Backbone.Model.extend({
-		defaults : {
-			//installed : true
-		}
-	});
-	
-	Backbone.API.Facebook.Models.Feed = Backbone.Model.extend({
-		defaults : {}
-	});
-	
-	Backbone.API.Facebook.Models.Post = Backbone.Model.extend({
-		defaults : {
-			method: "feed",
-			link: "",
-			picture: "",
-			name: "",
-			caption: "",
-			description: ""
-		}
-	});
-	
-	Backbone.API.Facebook.Models.Login = Backbone.Model.extend({
-		defaults : {
-			method: "oauth", 
-			client_id: false, 
-			redirect_uri: ""
-		}
-	});
-	
-	// Me is an extension of the user
-	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
-		url : "/me",
-		defaults : { 
-			id : "me" 
-		}
-	});
-	
-	
-	// Collections
-	Backbone.API.Facebook.Collections.Friends = Backbone.API.Facebook.extend({
+	//
+	Backbone.API.Facebook.Collections.Friends = Collection.extend({
 		model : Backbone.API.Facebook.Models.User,
 		url: function(){
 			return {
@@ -121,7 +133,7 @@
 		}
 	});
 
-	Backbone.API.Facebook.Collections.Feed = Backbone.API.Facebook.extend({
+	Backbone.API.Facebook.Collections.Feed = Collection.extend({
 		// examples options:
 		options: {
 			//access_token : config.facebook.access_token
@@ -159,8 +171,7 @@
 	
 	// Views
 	
-	// - Main constructor
-	
+	// - Main Constructor
 	var View = Backbone.View.extend({ 
 		template : FB.ui, 
 		initialize: function( options ){
@@ -179,7 +190,7 @@
 		}
 	});
 	
-	
+	//
 	Backbone.API.Facebook.Views.Post = View.extend({
 		
 	});
