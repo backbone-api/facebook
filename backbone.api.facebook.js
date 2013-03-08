@@ -79,6 +79,13 @@
 		}
 	});
 	
+	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
+		url : "/me",
+		defaults : { 
+			id : "me" 
+		}
+	});
+	
 	
 	// Collections
 	Backbone.API.Facebook.Collections.Friends = Backbone.API.Facebook.extend({
