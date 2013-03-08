@@ -59,7 +59,6 @@
 		}
 	});
 	
-	
 	// Namespace definition
 	Backbone.API.Facebook.Models = {};
 	Backbone.API.Facebook.Collections = {};
@@ -74,11 +73,29 @@
 	});
 	
 	Backbone.API.Facebook.Models.Feed = Backbone.Model.extend({
+		defaults : {}
+	});
+	
+	Backbone.API.Facebook.Models.Post = Backbone.Model.extend({
 		defaults : {
-			//installed : true
+			method: "feed",
+			link: "",
+			picture: "",
+			name: "",
+			caption: "",
+			description: ""
 		}
 	});
 	
+	Backbone.API.Facebook.Models.Login = Backbone.Model.extend({
+		defaults : {
+			method: "oauth", 
+			client_id: false, 
+			redirect_uri: ""
+		}
+	});
+	
+	// Me is an extension of the user
 	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
 		url : "/me",
 		defaults : { 
@@ -138,6 +155,40 @@
 			}
 		}
 	});
+	
+	
+	// Views
+	
+	// - Main constructor
+	
+	var View = Backbone.View.extend({ 
+		template : FB.ui, 
+		initialize: function( options ){
+			if( options.callback ) this.callback = options.callback;
+			// load the parent?
+			//
+			return this;
+		}, 
+		render : function(){
+			
+			this.template( this.model.toJSON(), this.callback );
+			
+		},
+		callback : function(){
+			
+		}
+	});
+	
+	
+	Backbone.API.Facebook.Views.Post = View.extend({
+		
+	});
+	
+	Backbone.API.Facebook.Views.Login = View.extend({
+		
+	});
+	
+	
 	
 // Shortcut
 if(typeof window.Facebook == "undefined"){
