@@ -42,6 +42,19 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 	
+	Backbone.API.Facebook.Models.Page = Model.extend({
+		defaults : {
+			method: "oauth", 
+			client_id: false, 
+			redirect_uri: ""
+		}, 
+		isFan: function( uid ){
+			uid = uid || "me()";
+			return (new isFan({ id : this.id, uid : uid }) ).fetch();
+		}
+		
+	});
+	
 	Backbone.API.Facebook.Models.Login = Model.extend({
 		defaults : {
 			method: "oauth", 
@@ -217,6 +230,23 @@ if( window.FB ) (function(_, Backbone) {
 	});
 	
 	
+// Helpers
+
+// Internal isFan method
+var isFan = new Model.extend({
+	url :  function(){
+		return {
+			method: 'fql.query',
+			query: 'select uid from page_fan where uid='+ this.options.uid +' and page_id='+ this.options.id
+		}
+	}, 
+	parse: function( response ){
+		// check if there is a data response 
+		return { fan : !(_.isEmpty(response.data) ) };
+	}
+
+});
+		
 	
 // Shortcut
 if(typeof window.Facebook == "undefined"){
