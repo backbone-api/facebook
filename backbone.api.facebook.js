@@ -63,6 +63,13 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 	
+	Backbone.API.Facebook.Models.AddToPage = Model.extend({
+		defaults : {
+		  method: 'pagetab',
+		  redirect_uri: '', //https://apps.facebook.com/{{fb_uri}}/
+		}
+	});
+	
 	// Me is an extension of the user
 	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
 		url : "/me",
@@ -228,6 +235,8 @@ if( window.FB ) (function(_, Backbone) {
 			}
 		}
 	});
+	
+	Backbone.API.Facebook.Views.AddToPage = View;
 	
 	
 // Helpers
