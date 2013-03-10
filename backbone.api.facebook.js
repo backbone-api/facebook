@@ -58,8 +58,8 @@ if( window.FB ) (function(_, Backbone) {
 	Backbone.API.Facebook.Models.Login = Model.extend({
 		defaults : {
 			method: "oauth", 
-			client_id: false, 
-			redirect_uri: ""
+			client_id: false, //fb_appId
+			redirect_uri: "" //https://apps.facebook.com/'+ fb_uri +'/'
 		}
 	});
 	
@@ -242,8 +242,11 @@ if( window.FB ) (function(_, Backbone) {
 // Helpers
 
 // Internal isFan method
+// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
 var isFan = new Model.extend({
 	url :  function(){
+		// alternate 'plain' url 
+		// "/"+ this.options.uid +"/likes/"+ this.options.id
 		return {
 			method: 'fql.query',
 			query: 'select uid from page_fan where uid='+ this.options.uid +' and page_id='+ this.options.id
