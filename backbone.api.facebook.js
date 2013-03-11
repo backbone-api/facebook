@@ -75,7 +75,48 @@ if( window.FB ) (function(_, Backbone) {
 		url : "/me",
 		defaults : { 
 			id : "me" 
+		}, 
+		// defaultOptions: {
+		options : {
+			// see https://developers.facebook.com/docs/authentication/permissions/
+			scope: [], // fb permissions
+			//autoFetch: true, // auto fetch profile after login
+			protocol: location.protocol
+		},
+		
+		initialize: function(){
+			var self = this;
+      		FB.Event.subscribe('auth.authResponseChange', function(e){ self.onLoginStatusChange(e) });
+			return Backbone.API.Facebook.Models.User.prototype.apply(this, arguments);
+		}, 
+		
+		login: function(callback){
+			callback =  callback || function() {};
+			FB.login(callback, { scope: this.options.scope.join(',') });
+		},
+		
+		logout: function(){
+			FB.logout();
+		},
+		
+    	onLoginStatusChange: function(response) {
+			if(this.options.auth === response.status) return false;
+			
+			var event;
+			
+			if(response.status === 'not_authorized') {
+				event = 'facebook:unauthorized';
+			} else if (response.status === 'connected') {
+				event = 'facebook:connected';
+				if(this.options.autoFetch === true) this.fetch();
+			} else {
+				event = 'facebook:disconnected';
+			}
+			
+			this.trigger(event, this, response);
+			this.options.auth = response.status;
 		}
+
 	});
 	
 	
