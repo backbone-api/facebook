@@ -35,6 +35,8 @@ var view = new Facebook.Views.Post({ model : post, callback : MyFunction });
 
 Created by Makis Tracend ( [@tracend](http://github.com/tracend) )
 
+Login/logout inspired by [facebook-user.js](https://github.com/fabrik42/facebook-user.js) - Copyright (c) 2010 Christian Bäuerlein
+
 Originally used for [havenbase.com](http://havenbase.com)
 
 Distributed through [Makesites.org](http://makesites.org)
