@@ -1,36 +1,36 @@
 // Assuming that Facebook JS lib is loaded...
 if( window.FB ) (function(_, Backbone) {
-	
+
 	// Fallbacks
 	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
-	
+
 	// Namespace definition
 	Backbone.API.Facebook = {
-		Models : {}, 
-		Collections : {}, 
+		Models : {},
+		Collections : {},
 		Views : {}
 	};
-	
-	
+
+
 	// Models
-	
+
 	// - Main Constructor
 	var Model = Backbone.Model.extend({
-		
+
 	});
-	
-	// 
+
+	//
 	Backbone.API.Facebook.Models.User = Model.extend({
 		defaults : {
 			//installed : true
 		}
 	});
-	
+
 	Backbone.API.Facebook.Models.Feed = Model.extend({
 		defaults : {}
 	});
-	
+
 	Backbone.API.Facebook.Models.Post = Model.extend({
 		defaults : {
 			method: "feed",
@@ -41,41 +41,41 @@ if( window.FB ) (function(_, Backbone) {
 			description: ""
 		}
 	});
-	
+
 	Backbone.API.Facebook.Models.Page = Model.extend({
 		defaults : {
-			method: "oauth", 
-			client_id: false, 
+			method: "oauth",
+			client_id: false,
 			redirect_uri: ""
-		}, 
+		},
 		isFan: function( uid ){
 			uid = uid || "me()";
 			return (new isFan({ id : this.id, uid : uid }) ).fetch();
 		}
-		
+
 	});
-	
+
 	Backbone.API.Facebook.Models.Login = Model.extend({
 		defaults : {
-			method: "oauth", 
+			method: "oauth",
 			client_id: false, //fb_appId
 			redirect_uri: "" //https://apps.facebook.com/'+ fb_uri +'/'
 		}
 	});
-	
+
 	Backbone.API.Facebook.Models.AddToPage = Model.extend({
 		defaults : {
 		  method: 'pagetab',
 		  redirect_uri: '', //https://apps.facebook.com/{{fb_uri}}/
 		}
 	});
-	
+
 	// Me is an extension of the user
 	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
 		url : "/me",
-		defaults : { 
-			id : "me" 
-		}, 
+		defaults : {
+			id : "me"
+		},
 		// defaultOptions: {
 		options : {
 			// see https://developers.facebook.com/docs/authentication/permissions/
@@ -83,27 +83,27 @@ if( window.FB ) (function(_, Backbone) {
 			//autoFetch: true, // auto fetch profile after login
 			protocol: location.protocol
 		},
-		
+
 		initialize: function(){
 			var self = this;
-      		FB.Event.subscribe('auth.authResponseChange', function(e){ self.onLoginStatusChange(e) });
+			FB.Event.subscribe('auth.authResponseChange', function(e){ self.onLoginStatusChange(e) });
 			return Backbone.API.Facebook.Models.User.prototype.apply(this, arguments);
-		}, 
-		
+		},
+
 		login: function(callback){
 			callback =  callback || function() {};
 			FB.login(callback, { scope: this.options.scope.join(',') });
 		},
-		
+
 		logout: function(){
 			FB.logout();
 		},
-		
-    	onLoginStatusChange: function(response) {
+
+		onLoginStatusChange: function(response) {
 			if(this.options.auth === response.status) return false;
-			
+
 			var event;
-			
+
 			if(response.status === 'not_authorized') {
 				event = 'facebook:unauthorized';
 			} else if (response.status === 'connected') {
@@ -112,26 +112,61 @@ if( window.FB ) (function(_, Backbone) {
 			} else {
 				event = 'facebook:disconnected';
 			}
-			
+
 			this.trigger(event, this, response);
 			this.options.auth = response.status;
 		}
 
 	});
-	
-	
+
+	Backbone.API.Facebook.Models.WebPage = Backbone.Model.extend({
+
+		defaults : {
+			"shares": 0,
+			"comments": 0,
+			"type": "website",
+			"is_scraped": false
+		},
+
+		options: {
+
+		},
+
+		url: function(){ return "https://graph.facebook.com/?ids="+ this.options.page },
+
+		initialize: function(model, options){
+			options = options || {};
+			this.options = _.extend(this.options, options);
+			return Backbone.Model.prototype.initialize.apply(this, arguments);
+		},
+
+		parse: function( data ){
+			// data arrives in a sub-object with the URL as the key
+			var model = {};
+			// - pick the first element regardless of key
+			for(var key in data ){
+				model = data[key];
+				break; // "break" because this is a loop
+			}
+			data = model;
+			console.log( data );
+			return data;
+		}
+
+	});
+
 	// Collections
-	
+
 	// - Main Constructor
 	var Collection = Backbone.Collection.extend({
 		// available options
 		options : {
 			access_token : false
-		}, 
+		},
 		fetch : function(method, model, options) {
 			var self = this;
-			
-			if( this.options.access_token ){ 
+
+			if( this.options.access_token ){
 				// we'll be using the supplied access token
 				Backbone.Collection.prototype.fetch.call( self );
 			} else {
@@ -143,16 +178,16 @@ if( window.FB ) (function(_, Backbone) {
 					// else try to FB.Login?
 				});
 			}
-		}, 
+		},
 		sync : function(method, model, options) {
-			
+
 			var url = (this.url instanceof Function) ? this.url() : this.url;
 			var params = {};
 			// add access token if available
-			if( this.options.access_token ){ 
+			if( this.options.access_token ){
 				params["access_token"] =  this.options.access_token;
 			}
-			
+
 			//FB.api(url, method, params, function( response ) {
 			FB.api(url, function( response ) {
 				// save response.paging for later?
@@ -160,7 +195,7 @@ if( window.FB ) (function(_, Backbone) {
 				var data = response.data || response;
 				options.success( data );
 			});
-			
+
 		},
 		parse : function( response ){
 			//console.log("facebook data:", response );
@@ -175,8 +210,8 @@ if( window.FB ) (function(_, Backbone) {
 			return data;
 		}
 	});
-	
-	
+
+
 	//
 	Backbone.API.Facebook.Collections.Friends = Collection.extend({
 		model : Backbone.API.Facebook.Models.User,
@@ -185,10 +220,10 @@ if( window.FB ) (function(_, Backbone) {
 				method: 'fql.query',
 				query: 'Select name, uid from user where is_app_user = 1 and uid in (select uid2 from friend where uid1 = me()) order by concat(first_name,last_name) asc'
 			}
-		}, 
+		},
 		initialize: function( model, options){
 			// auto-fetch if requested...
-			if( options.fetch ){ 
+			if( options.fetch ){
 				this.fetch();
 			}
 		}
@@ -198,7 +233,7 @@ if( window.FB ) (function(_, Backbone) {
 		// examples options:
 		options: {
 			//access_token : config.facebook.access_token
-		}, 
+		},
 		model : Backbone.API.Facebook.Models.Feed,
 		url: function(){
 			// creating an object of parameters
@@ -207,7 +242,7 @@ if( window.FB ) (function(_, Backbone) {
 				query: "select message,description,attachment,created_time from stream where source_id ='"+ this.id +"' limit "+ this.num,
 			}
 			// add access token if available
-			if( this.options.access_token ){ 
+			if( this.options.access_token ){
 				// we'll be using the supplied access token
 				params["access_token"] = this.options.access_token;
 			}
@@ -215,52 +250,52 @@ if( window.FB ) (function(_, Backbone) {
 			// old...
 			// check if there is either an id or user set - fallback to 'me'
 			//var page = this.user || this.id || "me";
-			//return "/"+ page +"/feed?limit="+ this.num; 
-		}, 
+			//return "/"+ page +"/feed?limit="+ this.num;
+		},
 		initialize: function( model, options){
 			// parameters
 			this.id = options.id || false;
 			this.user = options.user || null;
 			this.num = options.num || 10;
 			// auto-fetch if requested...
-			if( options.fetch ){ 
+			if( options.fetch ){
 				this.fetch();
 			}
 		}
 	});
-	
-	
+
+
 	// Views
-	
+
 	// - Main Constructor
-	var View = Backbone.View.extend({ 
-		template : FB.ui, 
+	var View = Backbone.View.extend({
+		template : FB.ui,
 		initialize: function( options ){
 			if( options.callback ) this.callback = options.callback;
 			// load the parent?
 			//
 			return this;
-		}, 
+		},
 		render : function(){
-			
+
 			this.template( this.model.toJSON(), this.callback );
-			
+
 		},
 		callback : function(){
-			
+
 		}
 	});
-	
+
 	//
 	Backbone.API.Facebook.Views.Post = View.extend({
 		callback : function(response) {
 			//document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
 		}
 	});
-	
+
 	Backbone.API.Facebook.Views.Login = View.extend({
 		callback : function (response) {
-			if( typeof( response ) != "undefined") { 
+			if( typeof( response ) != "undefined") {
 				if(response.session) {
 					//var user = JSON.parse(response.session);
 					// save the userid in the form
@@ -276,34 +311,34 @@ if( window.FB ) (function(_, Backbone) {
 			}
 		}
 	});
-	
+
 	Backbone.API.Facebook.Views.AddToPage = View;
-	
-	
+
+
 // Helpers
 
 // Internal isFan method
 // Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
-var isFan = new Model.extend({
+var isFan = Model.extend({
 	url :  function(){
-		// alternate 'plain' url 
+		// alternate 'plain' url
 		// "/"+ this.options.uid +"/likes/"+ this.options.id
 		return {
 			method: 'fql.query',
 			query: 'select uid from page_fan where uid='+ this.options.uid +' and page_id='+ this.options.id
 		}
-	}, 
+	},
 	parse: function( response ){
-		// check if there is a data response 
+		// check if there is a data response
 		return { fan : !(_.isEmpty(response.data) ) };
 	}
 
 });
-		
-	
+
+
 // Shortcut
 if(typeof window.Facebook == "undefined"){
 	window.Facebook = Backbone.API.Facebook;
 }
-	
+
 })(this._, this.Backbone);
