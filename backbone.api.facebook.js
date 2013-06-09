@@ -149,7 +149,6 @@ if( window.FB ) (function(_, Backbone) {
 				break; // "break" because this is a loop
 			}
 			data = model;
-			console.log( data );
 			return data;
 		}
 
