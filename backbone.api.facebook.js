@@ -56,6 +56,8 @@ if( window.FB ) (function(_, Backbone) {
 			} else {
 				FB.getLoginStatus(function(response){
 					if( response.status == "connected" ){
+						// save token
+						token.set( response.authResponse );
 						// continue with request
 						Backbone.Model.prototype.fetch.call( self );
 					}
@@ -252,6 +254,8 @@ if( window.FB ) (function(_, Backbone) {
 			} else {
 				FB.getLoginStatus(function(response){
 					if( response.status == "connected" ){
+						// save token
+						token.set( response.authResponse );
 						// continue with request
 						Backbone.Collection.prototype.fetch.call( self );
 					}
@@ -380,6 +384,10 @@ if( window.FB ) (function(_, Backbone) {
 
 
 // Internal
+// - internal access token
+// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
+var Token = Backbone.Model.extend({
+});
 // - isFan method
 // Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
 var isFan = Model.extend({
@@ -398,6 +406,8 @@ var isFan = Model.extend({
 
 });
 
+// init token
+var token = new Token();
 
 // Shortcut
 if(typeof window.Facebook == "undefined"){
