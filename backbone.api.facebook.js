@@ -29,8 +29,8 @@ if( window.FB ) (function(_, Backbone) {
 		var params = {};
 
 		// add access token if available
-		if( this.options && this.options.access_token ){
-			params["access_token"] =  this.options.access_token;
+		if( this.getToken() ){
+			params["access_token"] =  this.getToken();
 		}
 
 		//FB.api(url, method, params, function( response ) {
@@ -43,6 +43,16 @@ if( window.FB ) (function(_, Backbone) {
 
 	};
 
+	var getToken = function(){
+		// first priority have the local options
+		if( this.options && this.options.access_token) return this.options.access_token;
+		// after that the internal token
+		if( !_.isUndefined( token.get("accessToken") ) ) return token.get("accessToken");
+		// no token
+		return false;
+	}
+
+
 	// Models
 
 	// - Main Constructor
@@ -50,7 +60,7 @@ if( window.FB ) (function(_, Backbone) {
 		fetch : function(method, model, options) {
 			var self = this;
 
-			if( this.options && this.options.access_token ){
+			if( this.getToken() ){
 				// we'll be using the supplied access token
 				Backbone.Model.prototype.fetch.call( self );
 			} else {
@@ -65,7 +75,8 @@ if( window.FB ) (function(_, Backbone) {
 				});
 			}
 		},
-		sync: Sync
+		sync: Sync,
+		getToken: getToken
 	});
 
 	//
@@ -132,9 +143,10 @@ if( window.FB ) (function(_, Backbone) {
 		},
 
 		parse: function( response ){
-			//console.log( response );
 			// error control?
-			return response.data;
+			//console.log( response );
+			// use only the first item
+			return response.shift();
 		}
 	});
 
@@ -248,7 +260,7 @@ if( window.FB ) (function(_, Backbone) {
 		fetch : function(method, model, options) {
 			var self = this;
 
-			if( this.options.access_token ){
+			if( this.getToken() ){
 				// we'll be using the supplied access token
 				Backbone.Collection.prototype.fetch.call( self );
 			} else {
@@ -275,7 +287,8 @@ if( window.FB ) (function(_, Backbone) {
 				return result;
 			});
 			return data;
-		}
+		},
+		getToken: getToken
 	});
 
 
