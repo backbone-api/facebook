@@ -1,3 +1,11 @@
+/* Backbone API: Facebook
+ * Source: https://github.com/backbone-api/facebook
+ *
+ * Created by Makis Tracend (@tracend)
+ * Distributed through [Makesites.org](http://makesites.org)
+ * Released under the [MIT license](http://makesites.org/licenses/MIT)
+ */
+
 // Assuming that Facebook JS lib is loaded...
 if( window.FB ) (function(_, Backbone) {
 
