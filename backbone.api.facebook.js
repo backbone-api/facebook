@@ -47,6 +47,22 @@ if( window.FB ) (function(_, Backbone) {
 
 	// - Main Constructor
 	var Model = Backbone.Model.extend({
+		fetch : function(method, model, options) {
+			var self = this;
+
+			if( this.options && this.options.access_token ){
+				// we'll be using the supplied access token
+				Backbone.Model.prototype.fetch.call( self );
+			} else {
+				FB.getLoginStatus(function(response){
+					if( response.status == "connected" ){
+						// continue with request
+						Backbone.Model.prototype.fetch.call( self );
+					}
+					// else try to FB.Login?
+				});
+			}
+		},
 		sync: Sync
 	});
 
@@ -363,7 +379,8 @@ if( window.FB ) (function(_, Backbone) {
 
 
 
-// Internal isFan method
+// Internal
+// - isFan method
 // Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
 var isFan = Model.extend({
 	url :  function(){
