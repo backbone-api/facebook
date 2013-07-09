@@ -21,11 +21,33 @@ if( window.FB ) (function(_, Backbone) {
 	};
 
 
+	// Helpers
+	// Sync method
+	var Sync = function(method, model, options) {
+
+		var url = (this.url instanceof Function) ? this.url() : this.url;
+		var params = {};
+
+		// add access token if available
+		if( this.options && this.options.access_token ){
+			params["access_token"] =  this.options.access_token;
+		}
+
+		//FB.api(url, method, params, function( response ) {
+		FB.api(url, function( response ) {
+			// save response.paging for later?
+			// send just the response.data:
+			var data = response.data || response;
+			options.success( data );
+		});
+
+	};
+
 	// Models
 
 	// - Main Constructor
 	var Model = Backbone.Model.extend({
-
+		sync: Sync
 	});
 
 	//
@@ -215,24 +237,7 @@ if( window.FB ) (function(_, Backbone) {
 				});
 			}
 		},
-		sync : function(method, model, options) {
-
-			var url = (this.url instanceof Function) ? this.url() : this.url;
-			var params = {};
-			// add access token if available
-			if( this.options.access_token ){
-				params["access_token"] =  this.options.access_token;
-			}
-
-			//FB.api(url, method, params, function( response ) {
-			FB.api(url, function( response ) {
-				// save response.paging for later?
-				// send just the response.data:
-				var data = response.data || response;
-				options.success( data );
-			});
-
-		},
+		sync : Sync,
 		parse : function( response ){
 			//console.log("facebook data:", response );
 			//is uid always the id? apparently...
@@ -351,7 +356,6 @@ if( window.FB ) (function(_, Backbone) {
 	Backbone.API.Facebook.Views.AddToPage = View;
 
 
-// Helpers
 
 // Internal isFan method
 // Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
