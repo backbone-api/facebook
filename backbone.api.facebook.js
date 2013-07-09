@@ -63,6 +63,35 @@ if( window.FB ) (function(_, Backbone) {
 
 	});
 
+	//
+	Backbone.API.Facebook.Models.Link = Model.extend({
+		defaults : {
+			url: window.location.href,
+			normalized_url: "",
+			share_count: 0,
+			like_count: 0,
+			comment_count: 0,
+			total_count: 0,
+			commentsbox_count: 0,
+			comments_fbid: 0,
+			click_count: 0
+		},
+		url: function(){
+			return {
+				method: 'fql.query',
+				query: "SELECT url,normalized_url,share_count,like_count,comment_count,total_count,commentsbox_count,comments_fbid,click_count FROM link_stat WHERE url ='"+ this.get("url") +"'"
+			}
+		},
+		initialize: function( model, options){
+			// fallback
+			options = options || {};
+			// auto-fetch if requested...
+			if( options.fetch ){
+				this.fetch();
+			}
+		}
+	});
+
 	Backbone.API.Facebook.Models.Login = Model.extend({
 		defaults : {
 			method: "oauth",
