@@ -111,6 +111,12 @@ if( window.FB ) (function(_, Backbone) {
 			if( options.fetch ){
 				this.fetch();
 			}
+		},
+
+		parse: function( response ){
+			//console.log( response );
+			// error control?
+			return response.data;
 		}
 	});
 
