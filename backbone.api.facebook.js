@@ -29,8 +29,10 @@ if( window.FB ) (function(_, Backbone) {
 		var params = {};
 
 		// add access token if available
-		if( this.getToken() ){
-			params["access_token"] =  this.getToken();
+		var token = this.getToken();
+		if( token ){
+			if( url instanceof Object) { url["access_token"] = token; }
+			else { url += "&access_token="+ token; }
 		}
 
 		//FB.api(url, method, params, function( response ) {
