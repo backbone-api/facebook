@@ -65,9 +65,14 @@ if( window.FB ) (function(_, Backbone) {
 		},
 
 		initialize: function(model, options){
+			// fallbacks
 			options = options || {};
 			this.options = _.extend(this.options, options);
-			return Backbone.Model.prototype.initialize.apply(this, arguments);
+			//return Backbone.Model.prototype.initialize.apply(this, arguments);
+			// auto-fetch if requested...
+			if( options.fetch ){
+				this.fetch();
+			}
 		},
 
 		fetch : function(method, model, options) {
@@ -146,14 +151,6 @@ if( window.FB ) (function(_, Backbone) {
 				query: "SELECT url,normalized_url,share_count,like_count,comment_count,total_count,commentsbox_count,comments_fbid,click_count FROM link_stat WHERE url ='"+ this.get("url") +"'"
 			}
 		},
-		initialize: function( model, options){
-			// fallback
-			options = options || {};
-			// auto-fetch if requested...
-			if( options.fetch ){
-				this.fetch();
-			}
-		},
 
 		parse: function( response ){
 			// error control?
@@ -227,7 +224,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	});
 
-	Backbone.API.Facebook.Models.WebPage = Backbone.Model.extend({
+	Backbone.API.Facebook.Models.WebPage = Model.extend({
 
 		defaults : {
 			"shares": 0,
@@ -241,12 +238,6 @@ if( window.FB ) (function(_, Backbone) {
 		},
 
 		url: function(){ return "https://graph.facebook.com/?ids="+ this.options.page },
-
-		initialize: function(model, options){
-			options = options || {};
-			this.options = _.extend(this.options, options);
-			return Backbone.Model.prototype.initialize.apply(this, arguments);
-		},
 
 		parse: function( data ){
 			// data arrives in a sub-object with the URL as the key
@@ -270,6 +261,18 @@ if( window.FB ) (function(_, Backbone) {
 		options : {
 			access_token : false
 		},
+
+		initialize: function(model, options){
+			// fallbacks
+			options = options || {};
+			this.options = _.extend(this.options, options);
+			//return Backbone.Model.prototype.initialize.apply(this, arguments);
+			// auto-fetch if requested...
+			if( options.fetch ){
+					this.fetch();
+			}
+		},
+
 		fetch : function(method, model, options) {
 			var self = this;
 
@@ -312,12 +315,6 @@ if( window.FB ) (function(_, Backbone) {
 			return {
 				method: 'fql.query',
 				query: 'Select name, uid from user where is_app_user = 1 and uid in (select uid2 from friend where uid1 = me()) order by concat(first_name,last_name) asc'
-			}
-		},
-		initialize: function( model, options){
-			// auto-fetch if requested...
-			if( options.fetch ){
-				this.fetch();
 			}
 		}
 	});
