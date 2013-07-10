@@ -145,6 +145,7 @@ if( window.FB ) (function(_, Backbone) {
 			comments_fbid: 0,
 			click_count: 0
 		},
+
 		url: function(){
 			return {
 				method: 'fql.query',
@@ -154,9 +155,12 @@ if( window.FB ) (function(_, Backbone) {
 
 		parse: function( response ){
 			// error control?
-			//console.log( response );
-			// use only the first item
-			return response.shift();
+			if( response instanceof Array );
+				// use only the first item
+				return response.shift();
+			} else {
+				return response;
+			}
 		}
 	});
 
