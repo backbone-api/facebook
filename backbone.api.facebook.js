@@ -266,7 +266,7 @@ if( window.FB ) (function(_, Backbone) {
 			// fallbacks
 			options = options || {};
 			this.options = _.extend(this.options, options);
-			//return Backbone.Model.prototype.initialize.apply(this, arguments);
+			//return Backbone.Collection.prototype.initialize.apply(this, arguments);
 			// auto-fetch if requested...
 			if( options.fetch ){
 					this.fetch();
