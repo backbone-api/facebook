@@ -59,6 +59,17 @@ if( window.FB ) (function(_, Backbone) {
 
 	// - Main Constructor
 	var Model = Backbone.Model.extend({
+		// available options
+		options : {
+			access_token : false
+		},
+
+		initialize: function(model, options){
+			options = options || {};
+			this.options = _.extend(this.options, options);
+			return Backbone.Model.prototype.initialize.apply(this, arguments);
+		},
+
 		fetch : function(method, model, options) {
 			var self = this;
 
