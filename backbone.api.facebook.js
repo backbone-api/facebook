@@ -155,7 +155,7 @@ if( window.FB ) (function(_, Backbone) {
 
 		parse: function( response ){
 			// error control?
-			if( response instanceof Array );
+			if( response instanceof Array ){
 				// use only the first item
 				return response.shift();
 			} else {
