@@ -375,11 +375,14 @@ if( window.FB ) (function(_, Backbone) {
 			if( options.callback ) this.callback = options.callback;
 			// load the parent?
 			//
-			return this;
+			// fincally, render the view
+			return this.render();
 		},
 		render : function(){
 
 			this.template( this.model.toJSON(), this.callback );
+			// preserve chainability?
+			return this;
 
 		},
 		callback : function(){
@@ -399,7 +402,7 @@ if( window.FB ) (function(_, Backbone) {
 			//
 			this.model = new Backbone.API.Facebook.Models.Login({
 				client_id: Backbone.API.Facebook.get("app_Id"), //fb_appId
-				redirect_uri: "https://apps.facebook.com/"+ Backbone.API.Facebook.get("uri") +'/'
+				//redirect_uri: "https://apps.facebook.com/"+ Backbone.API.Facebook.get("uri") +'/'
 			});
 			// load the parent?
 			//
@@ -426,7 +429,6 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	Backbone.API.Facebook.Views.AddToPage = View;
-
 
 
 // Internal
