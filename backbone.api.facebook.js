@@ -369,6 +369,9 @@ if( window.FB ) (function(_, Backbone) {
 	var View = Backbone.View.extend({
 		template : FB.ui,
 		initialize: function( options ){
+			// fallback
+			options = options || {};
+
 			if( options.callback ) this.callback = options.callback;
 			// load the parent?
 			//
@@ -392,20 +395,32 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	Backbone.API.Facebook.Views.Login = View.extend({
+		initialize: function( options ){
+			//
+			this.model = new Backbone.API.Facebook.Models.Login({
+				client_id: Backbone.API.Facebook.get("app_Id"), //fb_appId
+				redirect_uri: "https://apps.facebook.com/"+ Backbone.API.Facebook.get("uri") +'/'
+			});
+			// load the parent?
+			//
+			return View.prototype.initialize.call( this, options );
+		},
 		callback : function (response) {
 			if( typeof( response ) != "undefined") {
 				if(response.session) {
 					//var user = JSON.parse(response.session);
 					// save the userid in the form
 					//$("#entry-form").find("input[name='fbid']").val(user.uid);
-					//top.location.href = tab.link;
+					top.location.href = this.model.get("redirect_uri");
 				} else {
 					// No session
-					//top.location.href = tab.host;
+					//top.location.href = 'http://facebook.com/';
+					console.log("no session");
 				}
 			} else {
 				// denied access
-				top.location.href = tab.host;
+				console.log("denied access");
+				//top.location.href = tab.host;
 			}
 		}
 	});
