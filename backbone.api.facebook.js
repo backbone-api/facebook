@@ -440,35 +440,42 @@ if( window.FB ) (function(_, Backbone) {
 
 
 
-// Internal
-// - internal access token
-// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
-var Token = Backbone.Model.extend({
-});
-// - isFan method
-// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
-var isFan = Model.extend({
-	url :  function(){
-		// alternate 'plain' url
-		// "/"+ this.options.uid +"/likes/"+ this.options.id
-		return {
-			method: 'fql.query',
-			query: 'select uid from page_fan where uid='+ this.options.uid +' and page_id='+ this.options.id
+	// Internal
+	// - internal access token
+	// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
+	var Token = Backbone.Model.extend({
+	});
+	// - isFan method
+	// Note: Always ask for the user_likes permission before calling any of the above to make sure you get a correct result
+	var isFan = Model.extend({
+		url :  function(){
+			// alternate 'plain' url
+			// "/"+ this.options.uid +"/likes/"+ this.options.id
+			return {
+				method: 'fql.query',
+				query: 'select uid from page_fan where uid='+ this.options.uid +' and page_id='+ this.options.id
+			}
+		},
+		parse: function( response ){
+			// check if there is a data response
+			return { fan : !(_.isEmpty(response.data) ) };
 		}
-	},
-	parse: function( response ){
-		// check if there is a data response
-		return { fan : !(_.isEmpty(response.data) ) };
+
+	});
+
+	// init token
+	var token = new Token();
+
+
+	// alias APP.API
+	if( typeof APP != "undefined" && (_.isUndefined( APP.API) || _.isUndefined( APP.API.Facebook) ) ){
+		APP.API = APP.API || {};
+		APP.API.Facebook = Backbone.API.Facebook;
 	}
 
-});
-
-// init token
-var token = new Token();
-
-// Shortcut
-if(typeof window.Facebook == "undefined"){
-	window.Facebook = Backbone.API.Facebook;
-}
+	// Shortcut
+	if(typeof window.Facebook == "undefined"){
+		window.Facebook = Backbone.API.Facebook;
+	}
 
 })(this._, this.Backbone);

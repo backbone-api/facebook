@@ -22,7 +22,7 @@ Facebook.set({
 		appId: 345644234546,
 		uri: "namespace"
 	});
-``
+```
 
 Most Backbone.js conventions apply using the _Facebook_ namespace.
 
