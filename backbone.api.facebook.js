@@ -172,14 +172,14 @@ if( window.FB ) (function(_, Backbone) {
 		defaults : {
 			method: "oauth",
 			client_id: false, //fb_appId
-			redirect_uri: "" //https://apps.facebook.com/'+ fb_uri +'/'
+			//redirect_uri: "" //https://apps.facebook.com/'+ fb_uri +'/'
 		}
 	});
 
 	Backbone.API.Facebook.Models.AddToPage = Model.extend({
 		defaults : {
-		  method: 'pagetab',
-		  redirect_uri: '', //https://apps.facebook.com/{{fb_uri}}/
+			method: 'pagetab',
+			//redirect_uri: '', //https://apps.facebook.com/{{fb_uri}}/
 		}
 	});
 
@@ -428,7 +428,16 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Views.AddToPage = View;
+	Backbone.API.Facebook.Views.AddToPage = View.extend({
+		initialize: function( options ){
+			//
+			this.model = new Backbone.API.Facebook.Models.AddToPage();
+			// load the parent?
+			//
+			return View.prototype.initialize.call( this, options );
+		}
+	});
+
 
 
 // Internal
