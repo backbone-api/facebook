@@ -13,12 +13,17 @@ if( window.FB ) (function(_, Backbone) {
 	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
 
+	// Base model - mainly used for setup options
+	Backbone.API.Facebook = Backbone.Model.extend({
+		defaults: {
+			"appId": false,
+			"uri": false
+		}
+	});
 	// Namespace definition
-	Backbone.API.Facebook = {
-		Models : {},
-		Collections : {},
-		Views : {}
-	};
+	Backbone.API.Facebook.Models = {};
+	Backbone.API.Facebook.Collections = {};
+	Backbone.API.Facebook.Views = {};
 
 
 	// Helpers
