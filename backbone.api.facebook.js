@@ -14,12 +14,11 @@ if( window.FB ) (function(_, Backbone) {
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
 
 	// Base model - mainly used for setup options
-	Backbone.API.Facebook = Backbone.Model.extend({
-		defaults: {
-			"appId": false,
-			"uri": false
-		}
+	Backbone.API.Facebook = new Backbone.Model({
+		"appId": false,
+		"uri": false
 	});
+
 	// Namespace definition
 	Backbone.API.Facebook.Models = {};
 	Backbone.API.Facebook.Collections = {};
