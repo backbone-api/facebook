@@ -172,6 +172,8 @@ if( window.FB ) (function(_, Backbone) {
 		defaults : {
 			method: "oauth",
 			client_id: false, //fb_appId
+			//display: "popup",
+			//response_type: "token"
 			//redirect_uri: "" //https://apps.facebook.com/'+ fb_uri +'/'
 		}
 	});
@@ -419,6 +421,7 @@ if( window.FB ) (function(_, Backbone) {
 					// No session
 					//top.location.href = 'http://facebook.com/';
 					console.log("no session");
+					window.location.reload();
 				}
 			} else {
 				// denied access
