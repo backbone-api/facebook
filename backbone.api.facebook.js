@@ -401,7 +401,7 @@ if( window.FB ) (function(_, Backbone) {
 		initialize: function( options ){
 			//
 			this.model = new Backbone.API.Facebook.Models.Login({
-				client_id: Backbone.API.Facebook.get("app_Id"), //fb_appId
+				client_id: Backbone.API.Facebook.get("appId"), //fb_appId
 				//redirect_uri: "https://apps.facebook.com/"+ Backbone.API.Facebook.get("uri") +'/'
 			});
 			// load the parent?
