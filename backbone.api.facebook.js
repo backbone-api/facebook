@@ -9,6 +9,9 @@
 // Assuming that Facebook JS lib is loaded...
 if( window.FB ) (function(_, Backbone) {
 
+	// Constants
+	var graph = "https://graph.facebook.com"
+
 	// Fallbacks
 	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
 	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
@@ -36,7 +39,7 @@ if( window.FB ) (function(_, Backbone) {
 		var token = this.getToken();
 		if( token ){
 			if( url instanceof Object) { url["access_token"] = token; }
-			else { url += "&access_token="+ token; }
+			else { url += ( url.search(/\?/) > -1 ) ? "&access_token="+ token : "?access_token="+ token; }
 		}
 
 		//FB.api(url, method, params, function( response ) {
@@ -187,7 +190,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	// Me is an extension of the user
 	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
-		url : "/me",
+		url : graph + "/me",
 		defaults : {
 			id : "me"
 		},
@@ -202,7 +205,7 @@ if( window.FB ) (function(_, Backbone) {
 		initialize: function(){
 			var self = this;
 			FB.Event.subscribe('auth.authResponseChange', function(e){ self.onLoginStatusChange(e) });
-			return Backbone.API.Facebook.Models.User.prototype.apply(this, arguments);
+			return Backbone.API.Facebook.Models.User.prototype.initialize.apply(this, arguments);
 		},
 
 		login: function(callback){
