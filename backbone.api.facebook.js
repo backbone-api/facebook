@@ -196,9 +196,10 @@ if( window.FB ) (function(_, Backbone) {
 		},
 		// defaultOptions: {
 		options : {
+			auth: false,
 			// see https://developers.facebook.com/docs/authentication/permissions/
 			scope: [], // fb permissions
-			//autoFetch: true, // auto fetch profile after login
+			autosync: true, // auto fetch profile after login
 			protocol: location.protocol
 		},
 
@@ -224,9 +225,14 @@ if( window.FB ) (function(_, Backbone) {
 
 			if(response.status === 'not_authorized') {
 				event = 'facebook:unauthorized';
+				// login logic
 			} else if (response.status === 'connected') {
 				event = 'facebook:connected';
-				if(this.options.autoFetch === true) this.fetch();
+				// save request for later...
+				this.request = FB.getAuthResponse();
+				// copy access token
+				this.options.access_token = this.request.accessToken;
+				if(this.options.autosync === true) this.fetch();
 			} else {
 				event = 'facebook:disconnected';
 			}
