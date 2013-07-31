@@ -202,7 +202,7 @@ if( window.FB ) (function(_, Backbone) {
 			autosync: true, // auto fetch profile after login
 			protocol: location.protocol
 		},
-
+		oauth: null,
 		initialize: function(){
 			var self = this;
 			FB.Event.subscribe('auth.authResponseChange', function(e){ self.onLoginStatusChange(e) });
@@ -219,6 +219,7 @@ if( window.FB ) (function(_, Backbone) {
 		},
 
 		onLoginStatusChange: function(response) {
+			// only execute once?
 			if(this.options.auth === response.status) return false;
 
 			var event;
@@ -231,7 +232,10 @@ if( window.FB ) (function(_, Backbone) {
 				// save request for later...
 				this.request = FB.getAuthResponse();
 				// copy access token
-				this.options.access_token = this.request.accessToken;
+				this.oauth = {
+					access_token : this.request.accessToken,
+					expiry : (new Date).getTime() + this.request.expiresIn
+				};
 				if(this.options.autosync === true) this.fetch();
 			} else {
 				event = 'facebook:disconnected';
