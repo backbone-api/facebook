@@ -43,10 +43,11 @@ if( window.FB ) (function(_, Backbone) {
 		}
 
 		//FB.api(url, method, params, function( response ) {
-		FB.api(url, function( response ) {
+		FB.api(url, method, function( response ) {
 			// save response.paging for later?
 			// send just the response.data:
 			var data = response.data || response;
+
 			options.success( data );
 		});
 
@@ -140,7 +141,7 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	Backbone.API.Facebook.Models.Tab = Model.extend({
-		url: function(){ return graph + "/"+ this.page +"/tabs/"+ this.id },
+		url: function(){ return graph + "/"+ this.page +"/tabs/app_"+ this.id },
 		defaults : {},
 		initialize: function( data, options ){
 			this.page = data.page;
