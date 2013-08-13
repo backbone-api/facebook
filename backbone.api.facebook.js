@@ -139,6 +139,16 @@ if( window.FB ) (function(_, Backbone) {
 
 	});
 
+	Backbone.API.Facebook.Models.Tab = Model.extend({
+		url: function(){ return graph + "/"+ this.page +"/tabs/"+ this.id },
+		defaults : {},
+		initialize: function( data, options ){
+			this.page = data.page;
+			this.id = Backbone.API.Facebook.get("appId");
+		}
+	});
+
+
 	//
 	Backbone.API.Facebook.Models.Link = Model.extend({
 		defaults : {
