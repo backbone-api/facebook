@@ -10,12 +10,13 @@
 if( window.FB ) (function(_, Backbone) {
 
 	// Constants
-	var graph = "https://graph.facebook.com"
+	var api = "https://graph.facebook.com";
 
 	// Base model - mainly used for setup options
 	var Facebook = new Backbone.Model({
-		"appId": false,
-		"uri": false
+		api: api,
+		appId: false,
+		uri: false
 	});
 
 	// Namespace definition
@@ -137,11 +138,11 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	Facebook.Models.Tab = Model.extend({
-		url: function(){ return graph + "/"+ this.page +"/tabs/app_"+ this.id },
+		url: function(){ return Facebook.get("api") + "/"+ this.page +"/tabs/app_"+ this.id },
 		defaults : {},
 		initialize: function( data, options ){
 			this.page = data.page;
-			this.id = Backbone.API.Facebook.get("appId");
+			this.id = Facebook.get("appId");
 		}
 	});
 
@@ -197,7 +198,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	// Me is an extension of the user
 	Facebook.Models.Me = Facebook.Models.User.extend({
-		url : graph + "/me",
+		url : function(){ return Facebook.get("api") + "/me"; },
 		defaults : {
 			id : "me"
 		},
@@ -267,7 +268,7 @@ if( window.FB ) (function(_, Backbone) {
 
 		},
 
-		url: function(){ return "https://graph.facebook.com/?ids="+ this.options.page },
+		url: function(){ return Facebook.get("api") +"/?ids="+ this.options.page },
 
 		parse: function( data ){
 			// data arrives in a sub-object with the URL as the key
