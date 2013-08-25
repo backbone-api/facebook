@@ -19,12 +19,12 @@ When the web page is loaded, passing the ```appId``` and ```uri``` for reference
 
 ```
 Facebook.set({
-		appId: 345644234546,
-		uri: "namespace"
-	});
+	appId: 345644234546,
+	uri: "namespace"
+});
 ```
 
-Most Backbone.js conventions apply using the _Facebook_ namespace.
+Common Backbone.js conventions apply using the _Facebook_ namespace.
 
 ```
 var friends = new Facebook.Collections.Friends();
@@ -44,11 +44,13 @@ var view = new Facebook.Views.Post({ model : post, callback : MyFunction });
 
 Created by Makis Tracend ( [@tracend](http://github.com/tracend) )
 
-Login/logout inspired by [facebook-user.js](https://github.com/fabrik42/facebook-user.js) - Copyright (c) 2010 Christian Bäuerlein
-
-Originally used for [havenbase.com](http://havenbase.com)
-
 Distributed through [Makesites.org](http://makesites.org)
 
-Released under the [MIT license](http://makesites.org/licenses/MIT)
+### Trivia
 
+* Login/logout inspired by [facebook-user.js](https://github.com/fabrik42/facebook-user.js) - Copyright (c) 2010 Christian Bäuerlein
+* Originally used for [havenbase.com](http://havenbase.com)
+
+### License
+
+Released under the [MIT license](http://makesites.org/licenses/MIT)
