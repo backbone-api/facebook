@@ -12,20 +12,16 @@ if( window.FB ) (function(_, Backbone) {
 	// Constants
 	var graph = "https://graph.facebook.com"
 
-	// Fallbacks
-	//APP = window.APP || (APP = { Models: {}, Collections: {}, Views: {} });
-	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
-
 	// Base model - mainly used for setup options
-	Backbone.API.Facebook = new Backbone.Model({
+	var Facebook = new Backbone.Model({
 		"appId": false,
 		"uri": false
 	});
 
 	// Namespace definition
-	Backbone.API.Facebook.Models = {};
-	Backbone.API.Facebook.Collections = {};
-	Backbone.API.Facebook.Views = {};
+	Facebook.Models = {};
+	Facebook.Collections = {};
+	Facebook.Views = {};
 
 
 	// Helpers
@@ -106,17 +102,17 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	//
-	Backbone.API.Facebook.Models.User = Model.extend({
+	Facebook.Models.User = Model.extend({
 		defaults : {
 			//installed : true
 		}
 	});
 
-	Backbone.API.Facebook.Models.Feed = Model.extend({
+	Facebook.Models.Feed = Model.extend({
 		defaults : {}
 	});
 
-	Backbone.API.Facebook.Models.Post = Model.extend({
+	Facebook.Models.Post = Model.extend({
 		defaults : {
 			method: "feed",
 			link: "",
@@ -127,7 +123,7 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Models.Page = Model.extend({
+	Facebook.Models.Page = Model.extend({
 		defaults : {
 			method: "oauth",
 			client_id: false,
@@ -140,7 +136,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	});
 
-	Backbone.API.Facebook.Models.Tab = Model.extend({
+	Facebook.Models.Tab = Model.extend({
 		url: function(){ return graph + "/"+ this.page +"/tabs/app_"+ this.id },
 		defaults : {},
 		initialize: function( data, options ){
@@ -151,7 +147,7 @@ if( window.FB ) (function(_, Backbone) {
 
 
 	//
-	Backbone.API.Facebook.Models.Link = Model.extend({
+	Facebook.Models.Link = Model.extend({
 		defaults : {
 			url: window.location.href,
 			normalized_url: "",
@@ -182,7 +178,7 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Models.Login = Model.extend({
+	Facebook.Models.Login = Model.extend({
 		defaults : {
 			method: "oauth",
 			client_id: false, //fb_appId
@@ -192,7 +188,7 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Models.AddToPage = Model.extend({
+	Facebook.Models.AddToPage = Model.extend({
 		defaults : {
 			method: 'pagetab',
 			//redirect_uri: '', //https://apps.facebook.com/{{fb_uri}}/
@@ -200,7 +196,7 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	// Me is an extension of the user
-	Backbone.API.Facebook.Models.Me = Backbone.API.Facebook.Models.User.extend({
+	Facebook.Models.Me = Facebook.Models.User.extend({
 		url : graph + "/me",
 		defaults : {
 			id : "me"
@@ -258,7 +254,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	});
 
-	Backbone.API.Facebook.Models.WebPage = Model.extend({
+	Facebook.Models.WebPage = Model.extend({
 
 		defaults : {
 			"shares": 0,
@@ -343,7 +339,7 @@ if( window.FB ) (function(_, Backbone) {
 
 
 	//
-	Backbone.API.Facebook.Collections.Friends = Collection.extend({
+	Facebook.Collections.Friends = Collection.extend({
 		model : Backbone.API.Facebook.Models.User,
 		url: function(){
 			return {
@@ -353,7 +349,7 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Collections.Feed = Collection.extend({
+	Facebook.Collections.Feed = Collection.extend({
 		// examples options:
 		options: {
 			//access_token : config.facebook.access_token
@@ -417,13 +413,13 @@ if( window.FB ) (function(_, Backbone) {
 	});
 
 	//
-	Backbone.API.Facebook.Views.Post = View.extend({
+	Facebook.Views.Post = View.extend({
 		callback : function(response) {
 			//document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
 		}
 	});
 
-	Backbone.API.Facebook.Views.Login = View.extend({
+	Facebook.Views.Login = View.extend({
 		initialize: function( options ){
 			//
 			this.model = new Backbone.API.Facebook.Models.Login({
@@ -455,7 +451,7 @@ if( window.FB ) (function(_, Backbone) {
 		}
 	});
 
-	Backbone.API.Facebook.Views.AddToPage = View.extend({
+	Facebook.Views.AddToPage = View.extend({
 		initialize: function( options ){
 			//
 			this.model = new Backbone.API.Facebook.Models.AddToPage();
@@ -493,16 +489,17 @@ if( window.FB ) (function(_, Backbone) {
 	// init token
 	var token = new Token();
 
-
-	// alias APP.API
+	// Store in selected namespace(s)
+	if( _.isUndefined(Backbone.API) ) Backbone.API = {};
+	Backbone.API.Facebook = Facebook;
+	// - alias APP.API
 	if( typeof APP != "undefined" && (_.isUndefined( APP.API) || _.isUndefined( APP.API.Facebook) ) ){
 		APP.API = APP.API || {};
-		APP.API.Facebook = Backbone.API.Facebook;
+		APP.API.Facebook = Facebook;
 	}
-
-	// Shortcut
+	// - Shortcut
 	if(typeof window.Facebook == "undefined"){
-		window.Facebook = Backbone.API.Facebook;
+		window.Facebook = Facebook;
 	}
 
 })(this._, this.Backbone);
