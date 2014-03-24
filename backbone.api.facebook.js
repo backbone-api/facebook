@@ -341,7 +341,7 @@ if( window.FB ) (function(_, Backbone) {
 
 	//
 	Facebook.Collections.Friends = Collection.extend({
-		model : Backbone.API.Facebook.Models.User,
+		model: Facebook.Models.User,
 		url: function(){
 			return {
 				method: 'fql.query',
@@ -355,7 +355,7 @@ if( window.FB ) (function(_, Backbone) {
 		options: {
 			//access_token : config.facebook.access_token
 		},
-		model : Backbone.API.Facebook.Models.Feed,
+		model: Facebook.Models.Feed,
 		url: function(){
 			// creating an object of parameters
 			var params = {
