@@ -1,0 +1,12 @@
+{
+	"author": "makesites",
+	"engine" : {
+		"node" : ">=0.8.x"
+	},
+	"dependencies" : {
+		"commander" : "~0.5",
+		"jshint" : "~0.9",
+		"uglify-js" : "2.3.x",
+		"hbs" : "~1.0"
+	}
+}
