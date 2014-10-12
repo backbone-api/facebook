@@ -18,7 +18,8 @@ var cli = require('commander'),
 	uglify = require("uglify-js"),
 	jshint = require('jshint'),
 	handlebars = require('hbs'),
-	fs = require('fs');
+	fs = require('fs'),
+	zlib = require('zlib');
 
 
 // will generate a CSV if package info contains multiple licenses
@@ -91,12 +92,17 @@ function minify(srcPath, distPath) {
 	ast = pro.ast_squeeze(ast);
 	*/
 
-	var result = uglify.minify(srcPath, { compressor: {
-		comments : /@name|@author|@cc_on|@url|@license/
+	var min = uglify.minify(srcPath, { compressor: {
+		comments : /@name|@author|@url|@license/
 	} });
 
-	fs.writeFileSync(distPath, result.code, FILE_ENCODING);
-	console.log(' '+ distPath +' built.');
+	// gzip
+	zlib.gzip(min.code, function (error, result) {
+		if (error) throw error;
+		fs.writeFileSync(distPath, result, FILE_ENCODING);
+		console.log(' '+ distPath +' built.');
+	});
+
 }
 
 function lint(path, callback) {
