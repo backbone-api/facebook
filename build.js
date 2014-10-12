@@ -93,7 +93,7 @@ function minify(srcPath, distPath) {
 	*/
 
 	var min = uglify.minify(srcPath, { compressor: {
-		comments : /@name|@author|@url|@license/
+		comments : /@name|@author|@cc_on|@url|@license/
 	} });
 
 	// gzip
