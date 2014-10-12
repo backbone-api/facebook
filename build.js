@@ -92,7 +92,7 @@ function minify(srcPath, distPath) {
 	*/
 
 	var result = uglify.minify(srcPath, { compressor: {
-		comments : /@name|@author|@url|@license/
+		comments : /@name|@author|@cc_on|@url|@license/
 	} });
 
 	fs.writeFileSync(distPath, result.code, FILE_ENCODING);
