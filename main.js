@@ -10,5 +10,5 @@
  * Distributed through [Makesites.org](http://makesites.org)
  *
  * @cc_on Copyright © Makesites.org
- * @license Released under the [{{license}} license](http://makesites.org/licenses/{{license}})
+ * @license Released under the {{license licenses}}
  */

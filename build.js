@@ -6,7 +6,7 @@
 // - Dependencies: NPM/Node.js
 // - Conventions:
 // * code is in a lib/ folder with a main.js as the main context (closure)
-// * a bower.json on the root contains all the info about the lib: name, description, author, license
+// * a package.json on the root contains all the info about the lib: name, description, author, license
 // * compiled files are saved in a build folder
 
 // settings
@@ -23,18 +23,17 @@ var cli = require('commander'),
 
 
 // will generate a CSV if package info contains multiple licenses
-/*
 handlebars.registerHelper('license', function(items){
 	items = items.map(function(val){
 		return val.type;
 	});
 	return items.join(', ');
 });
-*/
+
 
 // Logic
-// - read module name from bower file
-var package = JSON.parse( fs.readFileSync('bower.json', FILE_ENCODING) ); // condition the existance of package.json or component.json...
+// - read module name from package file
+var package = JSON.parse( fs.readFileSync('package.json', FILE_ENCODING) ); // condition the existance of package.json or component.json...
 var name = package.name;
 // - list files in the lib folder
 var src = libFiles();
