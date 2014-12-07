@@ -132,6 +132,14 @@ function lint(path, callback) {
 }
 
 function libFiles(){
+	// strictly define file order (temp)
+	var src = [
+		'lib/helpers.js',
+		'lib/models.js',
+		'lib/collections.js',
+		'lib/views.js'
+	];
+	/*
 	var src = [];
 	var files = fs.readdirSync( "lib/" );
 	// folter only javascript files
@@ -141,5 +149,6 @@ function libFiles(){
 		if( file.substr(0, 1) == "." || file.substr(-3) !== ".js" || file == "main.js" ) continue;
 		src.push( "lib/"+ file );
 	}
+	*/
 	return src;
 }
