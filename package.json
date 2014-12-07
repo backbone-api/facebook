@@ -1,6 +1,6 @@
 {
 	"name" : "backbone.api.facebook",
-	"version" : "0.6.1",
+	"version" : "0.7.0",
 	"author" : "makesites",
 	"description" : "Backbone API: Facebook",
 	"homepage" : "http://github.com/backbone-api/facebook",

@@ -2,7 +2,7 @@
  * @name backbone.api.facebook
  * Backbone API: Facebook
  *
- * Version: 0.6.1 (Sun, 07 Dec 2014 06:35:49 GMT)
+ * Version: 0.7.0 (Sun, 07 Dec 2014 08:37:36 GMT)
  * Source: http://github.com/backbone-api/facebook
  *
  * @author makesites
@@ -72,8 +72,11 @@ var Sync = function(method, model, options) {
 		else { url += ( url.search(/\?/) > -1 ) ? "&access_token="+ token : "?access_token="+ token; }
 	}
 
+	// normalize method
+	var rest = { "read" : "get", "create": "post", "update": "put", "delete": "delete" };
+
 	//FB.api(url, method, params, function( response ) {
-	FB.api(url, method, function( response ) {
+	FB.api(url, rest[method], function( response ) {
 		// save response.paging for later?
 		// send just the response.data:
 		var data = response.data || response;
@@ -117,14 +120,17 @@ var Model = Backbone.Model.extend({
 
 		if( this.getToken() ){
 			// we'll be using the supplied access token
-			Backbone.Model.prototype.fetch.call( self );
+			Backbone.Model.prototype.fetch.call( self, method, model, options );
+		} else if( !this.options.auth ){
+			// this endpoint doesn't require login
+			Backbone.Model.prototype.fetch.call( self, method, model, options );
 		} else {
 			FB.getLoginStatus(function(response){
 				if( response.status == "connected" ){
 					// save token
 					token.set( response.authResponse );
 					// continue with request
-					Backbone.Model.prototype.fetch.call( self );
+					Backbone.Model.prototype.fetch.call( self, method, model, options );
 				}
 				// else try to FB.Login?
 			});
@@ -136,7 +142,12 @@ var Model = Backbone.Model.extend({
 
 //
 Facebook.Models.User = Model.extend({
+	url : function(){ return Facebook.get("api") + "/"+ this.get("id"); },
+	options: {
+		auth: false
+	},
 	defaults : {
+		id: 0
 		//installed : true
 	}
 });
@@ -230,7 +241,6 @@ Facebook.Models.AddToPage = Model.extend({
 
 // Me is an extension of the user
 Facebook.Models.Me = Facebook.Models.User.extend({
-	url : function(){ return Facebook.get("api") + "/me"; },
 	defaults : {
 		id : "me"
 	},
@@ -545,6 +555,8 @@ Facebook.Views.AddToPage = View.extend({
 		if( isAPP ){
 			window.APP = APP;
 		}
+		// optionally extend the global namespace with shortcode
+		if( !window.Facebook ) window.Facebook = Facebook;
 	}
 
 	// for module loaders:
