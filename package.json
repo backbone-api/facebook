@@ -1,5 +1,16 @@
 {
-	"author": "makesites",
+	"name" : "backbone.api.facebook",
+	"version" : "0.6.1",
+	"author" : "makesites",
+	"description" : "Backbone API: Facebook",
+	"homepage" : "http://github.com/backbone-api/facebook",
+	"repository" : "http://github.com/backbone-api/facebook",
+	"licenses": [
+		{
+		"type": "MIT",
+		"url": "http://makesites.org/licenses/MIT/"
+		}
+	],
 	"engine" : {
 		"node" : ">=0.8.x"
 	},
