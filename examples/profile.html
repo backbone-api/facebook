@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Backbone API: Facebook</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+
+	<!-- deps -->
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+	<script type="text/javascript" src="//connect.facebook.net/en_US/all.js"></script>
+
+	<!-- lib -->
+	<script type="text/javascript" src="../build/backbone.api.facebook.js"></script>
+
+
+</head>
+<body>
+
+<p>In this simple example we read the details of a profile using an id by calling <i>Facebook.Models.User</i></p>
+
+<pre class="user" ></pre>
+
+
+<!-- Example logic -->
+<script type="text/javascript">
+
+	var user = new Facebook.Models.User({
+		id : 1372622703,
+	});
+
+	user.fetch();
+
+	user.on("sync", function(){
+		var data = user.toJSON();
+		$("pre.user").html( JSON.stringify(data) );
+	});
+
+</script>
+
+
+</body>
+</html>
